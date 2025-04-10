@@ -1,10 +1,23 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { FiveElementsCalculator } from '@/utils/fiveElementsCalculator';
 
-export default function Home() {
+// 加载中组件
+function LoadingComponent() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-50 to-white">
+      <div className="text-center">
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600 mb-4"></div>
+        <h2 className="text-xl text-purple-700">正在加载...</h2>
+      </div>
+    </div>
+  );
+}
+
+// 主页内容组件
+function HomeContent() {
   const router = useRouter();
   const [countries, setCountries] = useState<string[]>([]);
   const [regions, setRegions] = useState<string[]>([]);
@@ -196,5 +209,14 @@ export default function Home() {
         </div>
       </div>
     </main>
+  );
+}
+
+// 导出主页组件
+export default function Home() {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <HomeContent />
+    </Suspense>
   );
 }

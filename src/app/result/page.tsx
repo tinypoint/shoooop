@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,7 +9,20 @@ import { FiveElement, Product } from '@/config/fiveElements';
 import { ProductRecommendationService } from '@/services/productRecommendation';
 import { ShopifyService } from '@/services/shopifyService';
 
-export default function Result() {
+// 加载中组件
+function LoadingComponent() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-50 to-white">
+      <div className="text-center">
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600 mb-4"></div>
+        <h2 className="text-xl text-purple-700">正在加载...</h2>
+      </div>
+    </div>
+  );
+}
+
+// 将主要内容抽取为单独的组件，使用useSearchParams
+function ResultContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -282,5 +295,14 @@ export default function Result() {
         )}
       </div>
     </main>
+  );
+}
+
+// 主页面组件
+export default function Result() {
+  return (
+    <Suspense fallback={<LoadingComponent />}>
+      <ResultContent />
+    </Suspense>
   );
 } 
