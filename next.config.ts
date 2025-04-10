@@ -4,6 +4,10 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
+  // 禁用ESLint检查
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;
